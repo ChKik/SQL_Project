@@ -1,0 +1,30 @@
+
+-- STORED PROCEDURE
+DELIMITER $$
+DROP  PROCEDURE IF EXISTS NewDriver$$    -- at , onoma,epwnymo,misthos,typos adeias,typos dromologioy,mines empeirias
+CREATE PROCEDURE  NewDriver(IN driverAT CHAR(10),IN firstname VARCHAR(20),IN lastname VARCHAR(20),IN misthos FLOAT(7,2),IN driverlicense ENUM('A','B','C','D'),IN driverroute ENUM('ABROAD','LOCAL'),IN driverexp TINYINT)
+BEGIN
+
+DECLARE drvnumfinal INT;
+DECLARE branchnum INT;
+DECLARE dumbtest INT;
+
+SELECT MIN(drvnumber) 
+INTO drvnumfinal
+FROM (SELECT wrk_br_code as wrk_br,COUNT(wrk_br_code) as drvnumber -- kanei ena prwto from kai meta apo auto to from epilegei to minimum
+FROM worker INNER JOIN driver ON wrk_AT=drv_AT
+GROUP BY wrk_br_code) AS Q1;  -- epistrefei to mikrotero arithmo apo drivers
+
+SELECT wrk_br_code,Count(*) as counter
+INTO branchnum,dumbtest
+FROM driver INNER JOIN worker ON drv_AT=wrk_AT
+GROUP BY wrk_br_code
+HAVING counter=drvnumfinal   -- entopizei to katastima poy exei ton arithmo me toys ligoteroys drivers sto branchnum 
+ORDER BY wrk_br_code
+LIMIT 1;
+
+INSERT INTO worker VALUES(driverAT,firstname,lastname,misthos,branchnum);
+INSERT INTO driver VALUES(driverAT,driverlicense,driverroute,driverexp);
+
+END$$
+DELIMITER ;

@@ -1,0 +1,166 @@
+-- BRANCH INSERT--
+INSERT INTO branch VALUES (null,'Karaiskakh 1','1','Patra');
+INSERT INTO branch VALUES (null,'Karaiskakh 2','2','Athina');
+INSERT INTO branch VALUES (null,'Patrews 3','5','Thessalonikh');
+
+-- WORKER INSERT--
+INSERT INTO worker VALUES('AM1000','Thomas','Johnson','1500.00','1');
+INSERT INTO worker VALUES('AM1001','Jeffry','McQuil','1650.13','2');
+INSERT INTO worker VALUES('AM1002','Bob','Jefferson','2000.00','3');
+INSERT INTO worker VALUES('AM1003','Michelle','Obama','1332.84','2');
+INSERT INTO worker VALUES('AM1004','Anastasia','Oleksei','1580.00','2');
+INSERT INTO worker VALUES('AM1005','John','Papamixahl','3200.35','1');
+INSERT INTO worker VALUES('AM1006','Dixie','Wimpleton','1600.00','1');
+INSERT INTO worker VALUES('AM1007','Willy','Deniro','1453.00','1');
+INSERT INTO worker VALUES('AM1008','Thomas','Johnson','3920.00','1');
+INSERT INTO worker VALUES('AM1009','Patrick','Asterias','1500.20','3');
+INSERT INTO worker VALUES('AM1010','Zoe','Anniston','1903.50','3');
+INSERT INTO worker VALUES('AM1011','Thomas','Pit','1244.50','3');
+INSERT INTO worker VALUES('AM1012','Eugene','Guderian','1994.23','3');
+INSERT INTO worker VALUES('AM1013','Helen','McGuill','2354.54','2');
+INSERT INTO worker VALUES('AM1014','Maria','Papadopoulou','2123.22','2');
+INSERT INTO worker VALUES('AM1015','Virginia','Barbory','1255.90','2');
+INSERT INTO worker VALUES('AM1016','Takis','Tsoukalas','1069.00','3');
+INSERT INTO worker VALUES('AM1017','Vasilis','Theodoroy','2531.98','3');
+INSERT INTO worker VALUES('AM1018','Haris','Kikidis','5132.98','3');
+
+-- GUIDE INSERT--
+INSERT INTO guide VALUES ('AM1000','Tour Guide at Patras Greece and Achaia Area.8 year of expertice.Patience,teamwork and effectiveness are guaranteed.Fluent Knowledge in Greek,English and French');
+INSERT INTO guide VALUES ('AM1001','Tour Guide in Athens and expert at ancient Greek times. 4 Years of Parthenon tours and 2 in the great relics located in the city of Athens.Fluent Knowledge in Greek,English and Italian');
+INSERT INTO guide VALUES ('AM1016','Tour Guide in Thessalonikh.5 years of experience and in a proffesional agency. Amazing reviews in TripAdvisor and TripGuide.Fluent Knowledge in Greek,English,Italian and German');
+insert into guide values ('AM1017','Tour Guide operating in Banshko,Bulgaria. Showcase of the city monuments and the famous ski resort.Fluent Knowledge of Greek,English,Bulgarian and Turkish');
+
+-- LANGUAGES--
+INSERT INTO languages VALUES('AM1000','Greek,English and French');
+INSERT INTO languages VALUES('AM1001','Greek,English and Italian');
+INSERT INTO languages VALUES('AM1016','Greek,English,German');
+INSERT INTO languages VALUES('AM1017','Greek,English,Bulgarian');
+
+-- ADMIN INSERT --
+INSERT INTO admin VALUES('AM1002','LOGISTICS','Bachelor of Science in Logistics and Supply Chain Management from University of Patras');
+INSERT INTO admin VALUES('AM1005','ADMINISTRATIVE','Masters Degree on Managment and Human Organization from Panteion University of Athens');
+INSERT INTO admin VALUES('AM1014','ADMINISTRATIVE','Masters Degree on Managment and Business Expansion from Aristoteleion University of Thessalonikh');
+INSERT INTO admin VALUES('AM1010','ADMINISTRATIVE','Masters Degree on Managment and Business Expansion from Aristoteleion University of Thessalonikh');
+INSERT INTO admin VALUES('AM1003','ACCOUNTING','Bachelors Degree in Business Accounting from TEI Patras');
+INSERT INTO admin VALUES('AM1006','ACCOUNTING','Bachelors Degree in Business Accounting from TEI Patras');
+
+-- DRIVER INSERT--
+INSERT INTO driver VALUES('AM1004','A','LOCAL','4');
+INSERT INTO driver VALUES('AM1007','B','ABROAD','3');
+INSERT INTO driver VALUES('AM1008','C','LOCAL','5');
+INSERT INTO driver VALUES('AM1009','A','LOCAL','2');
+INSERT INTO driver VALUES('AM1011','D','ABROAD','10');
+INSERT INTO driver VALUES('AM1012','C','LOCAL','2');
+INSERT INTO driver VALUES('AM1013','A','LOCAL','1');
+INSERT INTO driver VALUES('AM1015','C','LOCAL','7');
+
+
+-- TRIP INSERT--
+INSERT INTO trip VALUES(null,'2022-7-1','2022-7-5','50','2600','1','AM1000','AM1004');
+INSERT INTO trip VALUES(null,'2022-7-6','2022-7-10','100','1500','1','AM1000','AM1009');
+INSERT INTO trip VALUES(null,'2022-7-9','2022-7-15','50','2800','2','AM1001','AM1008');
+INSERT INTO trip VALUES(null,'2022-8-11','2022-8-18','87','1000','1','AM1000','AM1009');
+INSERT INTO trip VALUES(null,'2022-7-16','2022-7-19','90','3500','2','AM1001','AM1013');
+INSERT INTO trip VALUES(null,'2022-6-20','2022-6-30','77','1800','2','AM1001','AM1015');
+INSERT INTO trip VALUES(null,'2022-6-2','2022-6-8','77','1800','3','AM1016','AM1012');
+INSERT INTO trip VALUES(null,'2022-7-2','2022-7-11','56','1235','3','AM1016','AM1008');
+INSERT INTO trip VALUES(null,'2022-01-19 00:00:00','2022-01-20 00:00:00','70','1453.34','3','AM1017','AM1007');  -- bulgaria
+INSERT INTO trip VALUES(null,'2022-1-10','2022-1-18','53','1342','3','AM1017','AM1007'); -- bulgaria
+INSERT INTO trip VALUES(null,'2022-1-20','2022-1-28','95','2380','3','AM1017','AM1011'); -- bulgaria
+
+-- EVENT INSERT--
+INSERT INTO event VALUES(1,'2022-07-01','2022-07-05','Trip to the ancient ruins from the once great cities of Patra,Aigio and Pyrgos. Food at local taverns and walk around the modern cities');
+INSERT INTO event Values(2,'2022-07-06','2022-07-10','Event at the archaiological museum of Patras,the ancient Ruins,the castle and the Roman aqueduct.');
+INSERT INTO event values(4,'2022-08-11','2022-08-18','Event at Hotel Astir where local artists and musicians will perform.Buffet and drinks included'); -- patra
+insert into event values(3,'2022-07-09 00:00:00','2022-07-15 00:00:00','Event at the brand new archaiological museum of Athens before visiting the Parthenon.Walkaround the old market and the local shops.Visitation of the National observatory and Stavros Niarhos foundation ');
+insert into event values(5,'2022-07-16 00:00:00','2022-07-19 00:00:00','Tour guides and local historians will showcase the great battle of Marathonas that took place in 490 B.C against the Persian Empire.');
+insert into event values(6,'2022-06-20 00:00:00','2022-06-30 00:00:00','Visiting the most famous beaches alongside the beautiful green forests of Euvoia. Quick trip to the historical cities of Eretreia and Chalkida.');
+insert into event values(7,'2022-06-02 00:00:00','2022-06-08 00:00:00','Event at the White Tower of Thessaloniki where a music bands will perform and walk around Aristotelous square');
+insert into event values(8,'2022-07-02 00:00:00','2022-07-11 00:00:00','Visiting the grave of Philipp II,father of Alexander the Great, in Vergina and showcase in the modern museum featuring Macedonian equipment as well as normal day items in ancient Greece');
+insert into event values(9,'2022-01-10 00:00:00','2022-01-18 00:00:00','Fun day at the famous Banshko ski resort. Followed by spa and sauna in mid-day and drinks at the evening party hosted by us.');
+insert into event values(10,'2022-01-20 00:00:00','2022-01-28 00:00:00','Visiting the historical city of Sofia with remnats of the Byzantine Empire remaining in the city. Impressive architecture as the city has existed for more than 8000 years.');
+
+-- MANAGES INSERT
+INSERT INTO manages VALUES('AM1005','1');
+INSERT INTO manages VALUES('AM1014','2');
+INSERT INTO manages VALUES('AM1010','3');
+
+-- PHONES INSERT--
+
+INSERT INTO phones VALUES('1','2610522510');
+INSERT INTO phones VALUES('2','210412210');
+INSERT INTO phones VALUES('3','2310549218');
+
+-- DESTINATION INSERT--
+INSERT INTO destination VALUES(1,'Achaia','Visiting the cities of Patras,Pyrgos and Aigio','LOCAL',1,'Greek');
+INSERT INTO destination VALUES(2,'Patra','Visiting the city of Patras and its ancient monuments','LOCAL',1,'Greek');
+INSERT INTO destination VALUES(3,'Patra','Visiting the city of Patras and Achaia Claus','LOCAL',1,'Greek');
+INSERT INTO destination VALUES(4,'Athens','Visiting the City of Athens and its monuments','LOCAL',4,'Greek');
+INSERT INTO destination VALUES(5,'Marathonas','Visiting the location of Marathonas','LOCAL',4,'GREEK');
+INSERT INTO destination VALUES(6,'Euvoia','Visiting the location of Euvoia','LOCAL',4,'GREEK');
+INSERT INTO destination VALUES(7,'Thessaloniki','Visiting Thessaloniki and the areas around it','LOCAL',7,'GREEK');
+INSERT INTO destination VALUES(8,'Vergina','Historical city of the Macedonian Empire and the grave of Philipp II','LOCAL',7,'GREEK');
+INSERT INTO destination VALUES(9,'Bulgaria','Visiting the city of Banshko and its famous ski resort','ABROAD',9,'BULGARIAN');
+INSERT INTO destination VALUES(10,'Sofia','City of Sofia,capital of Bulgaria','ABROAD',9,'BULGARIAN');
+
+-- TRAVEL_TO--
+
+INSERT INTO travel_to VALUES(1,1,'2022-07-01','2022-07-05 00:00:00');
+INSERT INTO travel_to VALUES(2,2,'2022-07-06 00:00:00','2022-07-10 00:00:00');
+INSERT INTO travel_to VALUES(4,3,'2022-08-11 00:00:00','2022-08-18 00:00:00');  -- patra--
+INSERT INTO travel_to VALUES(3,4,'2022-07-09 00:00:00','2022-07-15 00:00:00');
+INSERT INTO travel_to VALUES(5,5,'2022-07-16 00:00:00','2022-07-19 00:00:00');
+INSERT INTO travel_to VALUES(6,6,'2022-06-20 00:00:00','2022-06-30 00:00:00'); -- athina--
+INSERT INTO travel_to VALUES(7,7,'2022-06-02 00:00:00','2022-06-08 00:00:00');
+INSERT INTO travel_to VALUES(8,8,'2022-07-02 00:00:00','2022-07-011 00:00:00'); -- thessaloniki--
+INSERT INTO travel_to VALUES(9,9,'2022-01-10 00:00:00','2022-01-18 00:00:00');
+INSERT INTO travel_to VALUES(10,10,'2022-01-20 00:00:00','2022-01-28 00:00:00'); -- bulgaria 
+
+-- RESERVATION
+INSERT INTO reservation values(1,4,'Georgios','Papadakis','ADULT');
+INSERT INTO reservation values(2,2,'Maximos','Anastasioy','ADULT');
+INSERT INTO reservation values(3,4,'Marios','Eskere','ADULT');
+INSERT INTO reservation values(5,5,'Xaralampos','Papadopoylos','ADULT');
+INSERT INTO reservation values(4,3,'Tasos','kekeogloy','ADULT');
+INSERT INTO reservation values(6,2,'Lefteris','Pantazopoylos','ADULT');
+INSERT INTO reservation values(7,3,'Elefteria','Vasilakopoyloy','MINOR');
+INSERT INTO reservation values(8,4,'Kwnstantinos','Palaiologos','ADULT');
+INSERT INTO reservation values(9,5,'Tommy','Shelby','MINOR');
+INSERT INTO reservation values(10,5,'Charis','Lesjho','ADULT');
+insert into reservation values(11,1,'Vasilis','Pasxalhs','MINOR');
+INSERT INTO reservation values(1,15,'Itzel','Lesjho','ADULT');
+INSERT INTO reservation values(2,20,'Harper','Malcolm','ADULT');
+INSERT INTO reservation values(2,11,'Jazmine','Moyer','ADULT');
+INSERT INTO reservation values(2,7,'Gaige','Moyer','MINOR');
+INSERT INTO reservation values(3,6,'Gaige','Moyer','MINOR');
+INSERT INTO reservation values(3,2,'Augustus','Kent','MINOR');
+INSERT INTO reservation values(3,1,'Frederick','Kent','ADULT');
+INSERT INTO reservation values(4,10,'Samir','Miranda','ADULT');
+INSERT INTO reservation values(4,11,'Jamir','Samir','ADULT');
+INSERT INTO reservation values(5,10,'Mehmet','Ali','MINOR');
+INSERT INTO reservation values(5,11,'Mohammed','Lester','ADULT');
+INSERT INTO reservation values(5,14,'Noah','Arcs','MINOR');
+INSERT INTO reservation values(6,10,'Yasmin','Goodwin','ADULT');
+INSERT INTO reservation values(6,11,'Saul','Goodman','ADULT');
+INSERT INTO reservation values(6,12,'Jessy','White','ADULT');
+INSERT INTO reservation values(6,13,'Skyler','White','ADULT');
+INSERT INTO reservation values(6,15,'Walker','Junior','MINOR');
+INSERT INTO reservation values(7,10,'Arthur','Shelby','ADULT');
+INSERT INTO reservation values(7,11,'Paul','Walker','ADULT');
+INSERT INTO reservation values(7,12,'TheRock','Opetras','ADULT');
+INSERT INTO reservation values(7,13,'Losky','Vlospa','ADULT');
+INSERT INTO reservation values(8,10,'Gilberto','Berry','MINOR');
+INSERT INTO reservation values(8,11,'Arthur','Shelby','ADULT');
+INSERT INTO reservation values(8,12,'Arthur','McAlister','ADULT');
+INSERT INTO reservation values(9,10,'Eleni','Mamasoyla','ADULT');
+INSERT INTO reservation values(9,11,'Georgia','Basa','MINOR');
+INSERT INTO reservation values(9,12,'Koug','Dimi','MINOR');
+INSERT INTO reservation values(10,7,'Ishain','Buckley','ADULT');
+INSERT INTO reservation values(10,4,'Josue','Rich','ADULT');
+INSERT INTO reservation values(11,4,'Gregory','Olsen','ADULT');
+INSERT INTO reservation values(11,10,'Mateos','Olsen','ADULT');
+INSERT INTO reservation values(11,12,'Josef','Stalin','MINOR');
+
+-- ITDEPARTMENT
+
+INSERT INTO itdepartment VALUES('AM1018','password','2022-01-01',NULL);

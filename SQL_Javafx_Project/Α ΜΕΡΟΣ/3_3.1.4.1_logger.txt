@@ -1,0 +1,456 @@
+
+-- table gia to log
+DROP TABLE IF EXISTS logger;
+CREATE TABLE IF NOT EXISTS logger
+(
+change_id INT PRIMARY KEY AUTO_INCREMENT,
+user VARCHAR(100),
+actiontype VARCHAR(20),
+changes VARCHAR(300),
+dateandtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- TA TRIGGER GIA INSERT,DELETE KAI UPDATE
+-- phones
+DELIMITER $$
+DROP TRIGGER IF EXISTS phonesinsert$$
+CREATE TRIGGER phonesinsert 
+AFTER INSERT on phones
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.ph_br_code,' ',NEW.ph_number);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON PHONES',changes,current_timestamp());
+	END$$
+    
+-- guide
+DROP TRIGGER IF EXISTS guideinsert$$
+CREATE TRIGGER guideinsert 
+AFTER INSERT on guide
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.gui_AT,' ',NEW.gui_cv);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON GUIDE',changes,current_timestamp());
+	END$$
+    
+-- manages
+DROP TRIGGER IF EXISTS managesinsert$$
+CREATE TRIGGER managesinsert 
+AFTER INSERT on manages
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.mng_adm_AT,' ',NEW.mng_br_code);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON MANAGES',changes,current_timestamp());
+	END$$
+-- languages
+DROP TRIGGER IF EXISTS languagesinsert$$
+CREATE TRIGGER languagesinsert 
+AFTER INSERT on languages
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.lng_gui_AT,' ',NEW.lng_language);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON LANGUAGES',changes,current_timestamp());
+	END$$
+
+-- branch
+DROP TRIGGER IF EXISTS branchinsert$$
+CREATE TRIGGER branchinsert 
+AFTER INSERT on branch
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.br_code,' ',NEW.br_street,' ',NEW.br_num,' ',NEW.br_city);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON BRANCH',changes,current_timestamp());
+	END$$
+
+-- driver
+DROP TRIGGER IF EXISTS driverinsert$$
+CREATE TRIGGER driverinsert 
+AFTER INSERT on driver
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.drv_AT,' ',NEW.drv_license,' ',NEW.drv_route,' ',NEW.drv_experience);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON DRIVER',changes,current_timestamp());
+	END$$
+    
+-- event
+DROP TRIGGER IF EXISTS eventinsert$$
+CREATE TRIGGER eventinsert 
+AFTER INSERT on event
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.ev_tr_id,' ',NEW.ev_start,' ',NEW.ev_end,' ',NEW.ev_descr);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON EVENT',changes,current_timestamp());
+END$$
+    
+    
+-- travelto
+DROP TRIGGER IF EXISTS traveltoinsert$$
+CREATE TRIGGER traveltoinsert 
+AFTER INSERT on travel_to
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.to_tr_id,' ',NEW.to_dst_id,' ',NEW.to_arrival,' ',NEW.to_departure);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON TRAVEL TO',changes,current_timestamp());
+END$$
+    
+-- worker
+DROP TRIGGER IF EXISTS workerinsert$$
+CREATE TRIGGER workerinsert 
+AFTER INSERT on worker
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.wrk_AT,' ',NEW.wrk_name,' ',NEW.wrk_lname,' ',NEW.wrk_salary,' ',NEW.wrk_br_code);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON WORKER',changes,current_timestamp());
+END$$
+
+-- RESERVATION
+DROP TRIGGER IF EXISTS reservationinsert$$
+CREATE TRIGGER reservationinsert 
+AFTER INSERT on reservation
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.res_tr_id,' ',NEW.res_seatnum,' ',NEW.res_name,' ',NEW.res_lname,' ',NEW.res_isadult);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON RESERVATION',changes,current_timestamp());
+END$$
+
+-- admin
+
+DROP TRIGGER IF EXISTS admininsert$$
+CREATE TRIGGER admininsert
+AFTER INSERT on admin
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.adm_AT,' ',NEW.adm_type,' ',NEW.adm_diploma);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON ADMIN',changes,current_timestamp());
+END$$
+
+--  DESTINATION
+DROP TRIGGER IF EXISTS destinationinsert$$
+CREATE TRIGGER destinationinsert 
+AFTER INSERT on destination
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.dst_id,' ',NEW.dst_name,' ',NEW.dst_descr,' ',NEW.dst_rtype,' ',NEW.dst_language,' ',NEW.dst_location);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON DESTINATION',changes,current_timestamp());
+END$$
+
+--  trip
+DROP TRIGGER IF EXISTS tripinsert$$
+CREATE TRIGGER tripinsert 
+AFTER INSERT on trip
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.tr_id,' ',NEW.tr_departure,' ',NEW.tr_return,' ',NEW.tr_maxseats,' ',NEW.tr_cost,' ',NEW.tr_br_code,' ',NEW.tr_gui_AT,' ',NEW.tr_drv_AT);
+		INSERT INTO logger VALUES(NULL,current_user(),'INSERT ON TRIP',changes,current_timestamp());
+END$$
+
+-- UPDATE TRIGGER
+
+-- phones
+DELIMITER $$
+DROP TRIGGER IF EXISTS phonesUPDATE$$
+CREATE TRIGGER phonesUPDATE 
+AFTER UPDATE on phones
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.ph_br_code,' ',NEW.ph_number);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON PHONES',changes,current_timestamp());
+	END$$
+    
+-- guide
+DROP TRIGGER IF EXISTS guideUPDATE$$
+CREATE TRIGGER guideUPDATE 
+AFTER UPDATE on guide
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.gui_AT,' ',NEW.gui_cv);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON GUIDE',changes,current_timestamp());
+	END$$
+    
+-- manages
+DROP TRIGGER IF EXISTS managesUPDATE$$
+CREATE TRIGGER managesUPDATE 
+AFTER UPDATE on manages
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.mng_adm_AT,' ',NEW.mng_br_code);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON MANAGES',changes,current_timestamp());
+	END$$
+-- languages
+DROP TRIGGER IF EXISTS languagesUPDATE$$
+CREATE TRIGGER languagesUPDATE 
+AFTER UPDATE on languages
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.lng_gui_AT,' ',NEW.lng_language);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON LANGUAGES',changes,current_timestamp());
+	END$$
+
+-- branch
+DROP TRIGGER IF EXISTS branchUPDATE$$
+CREATE TRIGGER branchUPDATE 
+AFTER UPDATE on branch
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.br_code,' ',NEW.br_street,' ',NEW.br_num,' ',NEW.br_city);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON BRANCH',changes,current_timestamp());
+	END$$
+
+-- driver
+DROP TRIGGER IF EXISTS driverUPDATE$$
+CREATE TRIGGER driverUPDATE 
+AFTER UPDATE on driver
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.drv_AT,' ',NEW.drv_license,' ',NEW.drv_route,' ',NEW.drv_experience);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON DRIVER',changes,current_timestamp());
+	END$$
+    
+-- event
+DROP TRIGGER IF EXISTS eventUPDATE$$
+CREATE TRIGGER eventUPDATE 
+AFTER UPDATE on event
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.ev_tr_id,' ',NEW.ev_start,' ',NEW.ev_end,' ',NEW.ev_descr);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON EVENT',changes,current_timestamp());
+END$$
+    
+    
+-- travelto
+DROP TRIGGER IF EXISTS traveltoUPDATE$$
+CREATE TRIGGER traveltoUPDATE 
+AFTER UPDATE on travel_to
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.to_tr_id,' ',NEW.to_dst_id,' ',NEW.to_arrival,' ',NEW.to_departure);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON TRAVEL TO',changes,current_timestamp());
+END$$
+    
+-- worker
+DROP TRIGGER IF EXISTS workerUPDATE$$
+CREATE TRIGGER workerUPDATE 
+AFTER UPDATE on worker
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.wrk_AT,' ',NEW.wrk_name,' ',NEW.wrk_lname,' ',NEW.wrk_salary,' ',NEW.wrk_br_code);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON WORKER',changes,current_timestamp());
+END$$
+
+-- RESERVATION
+DROP TRIGGER IF EXISTS reservationUPDATE$$
+CREATE TRIGGER reservationUPDATE 
+AFTER UPDATE on reservation
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.res_tr_id,' ',NEW.res_seatnum,' ',NEW.res_name,' ',NEW.res_lname,' ',NEW.res_isadult);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON RESERVATION',changes,current_timestamp());
+END$$
+
+-- admin
+
+DROP TRIGGER IF EXISTS adminUPDATE$$
+CREATE TRIGGER adminUPDATE
+AFTER UPDATE on admin
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.adm_AT,' ',NEW.adm_type,' ',NEW.adm_diploma);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON ADMIN',changes,current_timestamp());
+END$$
+
+--  DESTINATION
+DROP TRIGGER IF EXISTS destinationUPDATE$$
+CREATE TRIGGER destinationUPDATE 
+AFTER UPDATE on destination
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.dst_id,' ',NEW.dst_name,' ',NEW.dst_descr,' ',NEW.dst_rtype,' ',NEW.dst_language,' ',NEW.dst_location);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON DESTINATION',changes,current_timestamp());
+END$$
+
+--  trip
+DROP TRIGGER IF EXISTS tripUPDATE$$
+CREATE TRIGGER tripUPDATE 
+AFTER UPDATE on trip
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(NEW.tr_id,' ',NEW.tr_departure,' ',NEW.tr_return,' ',NEW.tr_maxseats,' ',NEW.tr_cost,' ',NEW.tr_br_code,' ',NEW.tr_gui_AT,' ',NEW.tr_drv_AT);
+		INSERT INTO logger VALUES(NULL,current_user(),'UPDATE ON TRIP',changes,current_timestamp());
+END$$
+
+-- DELETE-----------
+
+-- TA TRIGGER GIA DELETE,DELETE KAI DELETE
+-- phones
+DELIMITER $$
+DROP TRIGGER IF EXISTS phonesDELETE$$
+CREATE TRIGGER phonesDELETE 
+AFTER DELETE on phones
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.ph_br_code,' ',OLD.ph_number);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON PHONES',changes,current_timestamp());
+	END$$
+    
+-- guide
+DROP TRIGGER IF EXISTS guideDELETE$$
+CREATE TRIGGER guideDELETE 
+AFTER DELETE on guide
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.gui_AT,' ',OLD.gui_cv);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON GUIDE',changes,current_timestamp());
+	END$$
+    
+-- manages
+DROP TRIGGER IF EXISTS managesDELETE$$
+CREATE TRIGGER managesDELETE 
+AFTER DELETE on manages
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.mng_adm_AT,' ',OLD.mng_br_code);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON MANAGES',changes,current_timestamp());
+	END$$
+-- languages
+DROP TRIGGER IF EXISTS languagesDELETE$$
+CREATE TRIGGER languagesDELETE 
+AFTER DELETE on languages
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.lng_gui_AT,' ',OLD.lng_language);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON LANGUAGES',changes,current_timestamp());
+	END$$
+
+-- branch
+DROP TRIGGER IF EXISTS branchDELETE$$
+CREATE TRIGGER branchDELETE 
+AFTER DELETE on branch
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.br_code,' ',OLD.br_street,' ',OLD.br_num,' ',OLD.br_city);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON BRANCH',changes,current_timestamp());
+	END$$
+
+-- driver
+DROP TRIGGER IF EXISTS driverDELETE$$
+CREATE TRIGGER driverDELETE 
+AFTER DELETE on driver
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.drv_AT,' ',OLD.drv_license,' ',OLD.drv_route,' ',OLD.drv_experience);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON DRIVER',changes,current_timestamp());
+	END$$
+    
+-- event
+DROP TRIGGER IF EXISTS eventDELETE$$
+CREATE TRIGGER eventDELETE 
+AFTER DELETE on event
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.ev_tr_id,' ',OLD.ev_start,' ',OLD.ev_end,' ',OLD.ev_descr);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON EVENT',changes,current_timestamp());
+END$$
+    
+    
+-- travelto
+DROP TRIGGER IF EXISTS traveltoDELETE$$
+CREATE TRIGGER traveltoDELETE 
+AFTER DELETE on travel_to
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.to_tr_id,' ',OLD.to_dst_id,' ',OLD.to_arrival,' ',OLD.to_departure);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON TRAVEL TO',changes,current_timestamp());
+END$$
+    
+-- worker
+DROP TRIGGER IF EXISTS workerDELETE$$
+CREATE TRIGGER workerDELETE 
+AFTER DELETE on worker
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.wrk_AT,' ',OLD.wrk_name,' ',OLD.wrk_lname,' ',OLD.wrk_salary,' ',OLD.wrk_br_code);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON WORKER',changes,current_timestamp());
+END$$
+
+-- RESERVATION
+DROP TRIGGER IF EXISTS reservationDELETE$$
+CREATE TRIGGER reservationDELETE 
+AFTER DELETE on reservation
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.res_tr_id,' ',OLD.res_seatnum,' ',OLD.res_name,' ',OLD.res_lname,' ',OLD.res_isadult);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON RESERVATION',changes,current_timestamp());
+END$$
+
+-- admin
+
+DROP TRIGGER IF EXISTS adminDELETE$$
+CREATE TRIGGER adminDELETE
+AFTER DELETE on admin
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.adm_AT,' ',OLD.adm_type,' ',OLD.adm_diploma);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON ADMIN',changes,current_timestamp());
+END$$
+
+--  DESTINATION
+DROP TRIGGER IF EXISTS destinationDELETE$$
+CREATE TRIGGER destinationDELETE 
+AFTER DELETE on destination
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.dst_id,' ',OLD.dst_name,' ',OLD.dst_descr,' ',OLD.dst_rtype,' ',OLD.dst_language,' ',OLD.dst_location);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON DESTINATION',changes,current_timestamp());
+END$$
+
+--  trip
+DROP TRIGGER IF EXISTS tripDELETE$$
+CREATE TRIGGER tripDELETE 
+AFTER DELETE on trip
+FOR EACH ROW
+	BEGIN
+		DECLARE changes VARCHAR(300); 
+        SET changes=CONCAT(OLD.tr_id,' ',OLD.tr_departure,' ',OLD.tr_return,' ',OLD.tr_maxseats,' ',OLD.tr_cost,' ',OLD.tr_br_code,' ',OLD.tr_gui_AT,' ',OLD.tr_drv_AT);
+		INSERT INTO logger VALUES(NULL,current_user(),'DELETE ON TRIP',changes,current_timestamp());
+END$$
+
+DELIMITER ;
+
+

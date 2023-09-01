@@ -1,0 +1,14 @@
+DELIMITER $$
+DROP TRIGGER IF EXISTS PaycheckInsurance$$
+CREATE TRIGGER PaycheckInsurance
+BEFORE UPDATE ON worker
+FOR EACH ROW
+BEGIN
+	IF (OLD.wrk_salary>NEW.wrk_salary) THEN
+		SIGNAL SQLSTATE VALUE '45000'
+		SET MESSAGE_TEXT='You cannot lower the salary of an employee!';
+	end if;
+END$$
+DELIMITER ; 
+
+UPDATE worker SET wrk_salary='100.0' WHERE wrk_AT='AM1000';

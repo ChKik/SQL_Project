@@ -1,0 +1,16 @@
+DELIMITER $$
+DROP TRIGGER IF EXISTS DateUpdate$$
+CREATE TRIGGER DateUpdate
+BEFORE UPDATE ON trip
+FOR EACH ROW
+BEGIN
+DECLARE tripexistence INT;
+SET tripexistence=NEW.tr_id;
+IF EXISTS(SELECT 1 FROM reservation WHERE res_tr_id=tripexistence ) THEN  -- epistrefei true an yparxei record me ayto to tr_id sto reservation pinaka
+	SIGNAL SQLSTATE VALUE '45000'
+	SET MESSAGE_TEXT='You cannot edit this trip as there are reservations already!';
+    END IF;
+END$$
+DELIMITER ;
+
+UPDATE trip SET tr_departure='2022-07-06 00:00:00',tr_return='2022-07-15 00:00:00' WHERE tr_id=1;

@@ -1,0 +1,28 @@
+-- DROP INDEX reservation_index ON reservation_offers;
+CREATE INDEX reservation_index
+ON  reservation_offers (prokatavoli);*/   -- thelei me index kai xwris index
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS ReservationList$$
+CREATE PROCEDURE ReservationList(IN price1 FLOAT(7,2),IN price2 FLOAT(7,2))
+BEGIN
+
+DECLARE firstname VARCHAR(30);
+DECLARE lastname VARCHAR(30);
+DECLARE flag INT;
+
+DECLARE ReservationCursor CURSOR FOR
+SELECT fname,lname FROM reservation_offers WHERE prokatavoli  BETWEEN price1 AND price2; 
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET flag=1;
+OPEN ReservationCursor;
+SET flag=0;
+REPEAT
+	FETCH ReservationCursor INTO firstname,lastname;
+	IF (flag=0)THEN
+		SELECT firstname as FirstName,lastname as LastName;
+    END IF;
+UNTIL(flag=1)
+END REPEAT;
+CLOSE ReservationCursor;
+END$$
+DELIMITER ;

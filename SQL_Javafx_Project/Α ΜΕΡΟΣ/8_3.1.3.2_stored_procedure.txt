@@ -1,0 +1,101 @@
+-- PROCEDURE POY MAS DINEI TIS RESERVED THESEIS
+DELIMITER $$   
+DROP PROCEDURE IF EXISTS ReservedSeats$$
+CREATE PROCEDURE ReservedSeats(IN id_trip  INT,OUT eksodos INT)
+	BEGIN
+		DECLARE seatnummax INT;
+        DECLARE reservedseats INT;
+        
+		SELECT COUNT(res_tr_id),trip.tr_maxseats
+        INTO reservedseats,seatnummax
+        FROM reservation INNER JOIN trip ON reservation.res_tr_id=trip.tr_id
+        WHERE res_tr_id=id_trip
+        GROUP BY res_tr_id;
+        
+		IF (reservedseats>=seatnummax) THEN
+			SIGNAL SQLSTATE VALUE '45000'
+			SET MESSAGE_TEXT='There are no available seats for this trip';
+        ELSE 
+			SET eksodos=reservedseats;  
+        END IF;
+	END $$
+DELIMITER ;
+
+
+--  PROCEDURE POY MOY EPISTREFEI TON ARITHMO TWN KENWN THESEWN SE ENA TRIP
+DELIMITER $$   
+DROP PROCEDURE IF EXISTS SeatEmptyCounter$$
+CREATE PROCEDURE SeatEmptyCounter(IN id_trip  INT,OUT eksodos INT)
+	BEGIN
+		DECLARE seatnummax INT;
+        DECLARE reservedseats INT;
+        
+		SELECT COUNT(res_tr_id),trip.tr_maxseats
+        INTO reservedseats,seatnummax
+        FROM reservation INNER JOIN trip ON reservation.res_tr_id=trip.tr_id
+        WHERE res_tr_id=id_trip
+        GROUP BY res_tr_id;
+        
+		IF (reservedseats>=seatnummax) THEN
+			SIGNAL SQLSTATE VALUE '45000'
+			SET MESSAGE_TEXT='There are no available seats for this trip';
+        ELSE 
+			SET eksodos=seatnummax-reservedseats;  
+        END IF;
+	END $$
+DELIMITER ;
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS TripInformation$$
+CREATE PROCEDURE TripInformation(IN branchid INT,IN date1 DATE,IN date2 DATE)
+BEGIN
+DECLARE Trip_ID_return INT;
+DECLARE anaxwrhsh DATE;
+DECLARE epistrofh DATE;
+DECLARE finished INT;
+DECLARE SeatsAvailable INT;
+DECLARE SeatsReserved INT;
+DECLARE GuideAM CHAR(10);
+DECLARE DriverAM CHAR(10); 
+DECLARE GuiName VARCHAR(20);
+DECLARE GuiLname VARCHAR(20);
+DECLARE DriverName VARCHAR(20);
+DECLARE DriverLname VARCHAR(20);
+DECLARE theseismax INT;
+DECLARE tripcost FLOAT(7,2);
+
+
+															/* arxiko date<departure kai departure<teliko
+																 gia na min piasei ola mexri telos poy einai megalutera*/
+DECLARE TripIDCursor CURSOR FOR
+SELECT tr_id,tr_departure,tr_return,tr_gui_AT,tr_drv_AT,tr_cost,tr_maxseats FROM trip WHERE tr_br_code=branchid AND date1<tr_departure AND tr_departure<date2;  -- fairnei kathe eggrafh me br_code=branchid poy dinoyme
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished=1; 
+OPEN TripIDCursor;
+SET finished=0;
+REPEAT 
+	FETCH TripIDCursor INTO Trip_ID_return,anaxwrhsh,epistrofh,GuideAM,DriverAM,tripcost,theseismax;
+		IF(finished=0) THEN
+		CALL ReservedSeats(Trip_ID_return,@SeatsReserved);  -- epistrefei to sunolo twn kratimenwn thesewn
+        CALL SeatEmptyCounter(Trip_ID_return,@SeatsAvailable);  -- epistrefei tis kenes theseis available
+        
+        SELECT wrk_name,wrk_lname
+        INTO GuiName,GuiLname		-- stoixeia guide
+        FROM worker
+        WHERE wrk_AT=GuideAM;
+        
+        SELECT wrk_name,wrk_lname
+        INTO DriverName,DriverLname
+        FROM worker				-- stoixeia driver
+        WHERE wrk_AT=DriverAM;
+        
+        SELECT tripcost AS TripCost,theseismax AS MaxSeats,@SeatsAvailable AS SeatsAvailable,@SeatsReserved AS SeatsReserved,GuiName AS GuideName,GuiLname AS GuideLastName,DriverName,DriverLname as DriverLastName;
+        
+        END IF;
+	UNTIL(finished=1)
+END REPEAT;
+CLOSE TripIDCursor;
+END$$
+DELIMITER ;

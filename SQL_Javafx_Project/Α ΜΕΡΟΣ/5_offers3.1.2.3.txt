@@ -1,0 +1,32 @@
+DROP TABLE IF EXISTS offers;
+CREATE  TABLE IF NOT EXISTS offers
+(
+id_prosforas INT NOT NULL AUTO_INCREMENT,
+start_date DATETIME NOT NULL,
+end_date DATETIME NOT NULL,
+cost_per_person FLOAT(7,2) NOT NULL,
+destination INT(11) NOT NULL,
+PRIMARY KEY(id_prosforas),
+CONSTRAINT offers_fk FOREIGN KEY (destination) REFERENCES destination(dst_id)
+ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS offers_reservation;
+CREATE TABLE IF NOT EXISTS offers_reservation
+(
+id_kratisis INT NOT NULL AUTO_INCREMENT,
+lname VARCHAR(30) NOT NULL,
+fname VARCHAR(30) NOT NULL,
+id_prosforas_reserve INT NOT NULL,
+prokatavoli FLOAT(7,2),
+PRIMARY KEY(id_kratisis),
+CONSTRAINT id_prosforas_reserve_FK FOREIGN KEY (id_prosforas_reserve) REFERENCES offers(id_prosforas)
+ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+INSERT INTO offers VALUES(NULL,'2022-02-01','2022-02-28',350.40,1);
+INSERT INTO offers VALUES(NULL,'2022-04-01','2022-04-30',1500.30,4);
+INSERT INTO offers VALUES(NULL,'2022-05-10','2022-05-25',864.28,7);
+
+
+

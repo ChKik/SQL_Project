@@ -1,0 +1,382 @@
+import java.lang.*;
+
+import javafx.scene.control.Button;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.*;
+import javafx.scene.*;
+import javafx.scene.layout.*;
+import javafx.scene.control.*;
+import javafx.geometry.*;
+import javafx.scene.paint.*;
+import java.sql.*;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+
+
+public class SQLengine {
+    private String tablechoose;
+    Stage mainscreen,insertstage,itWindow;
+    String username,password;
+    Label title,comboboxlbl;
+    Button buttoninsert,buttondel,buttonupdate,buttonselect,btnexitit,combobtn;
+    ComboBox<String> TableChoice;
+    Scene itscene,comboscene;
+    TextField txtValue;
+
+
+    //kanei authenticate ton xrhsth oti yparxei sto database kai einai sto itdepartment
+    public boolean Authentication(String username1,String password1){
+        String tempuser,temppass,workerselect,workerAM,fname,lname,fullusername;
+
+        try(Connection conn=DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/ceidprojectsql22",
+                username1,password1)){     //leitourgei
+            Statement stmt=conn.createStatement();
+            Statement stmt2=conn.createStatement();
+            String itcheckexists="SELECT it_at,password FROM itdepartment";  //pairnei to AM kai to password apo to itdepartment
+
+            ResultSet itresult=stmt.executeQuery(itcheckexists);
+
+            if(conn!=null){System.out.println("LOGIN SUCCESSFUL");}  //GIA TIN CONSOLA
+
+            while(itresult.next()){                                         //while gia tin periptwsh poy exoyme parapanw apo enan sto itdepartment
+                temppass=itresult.getString("password");
+                workerAM=itresult.getString("it_at");        //epistrefei ton worker me to AM apo to itresult set
+
+                String workername="SELECT wrk_name,wrk_lname FROM worker WHERE wrk_AT='"+workerAM+"'";
+                ResultSet workerresult= stmt2.executeQuery(workername);  //tha epistrepsei fname kai lname toy worker
+                workerresult.next();  //einai null stin arxi kai prepei na paei sto monadiko stoixeio poy epistrefetai
+                fname=workerresult.getString("wrk_name");
+                lname=workerresult.getString("wrk_lname");
+                fullusername=fname.concat(lname);           //concat gia na parw to fullusername
+
+
+                if((fullusername.equals(username1))&&(password1.equals(temppass))){   //checkarei to workername kai to password toy it ama yparxei,kai an nai epistrefei true sto  login
+                    return true;
+                }  //doulevei
+            }
+
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        System.out.println("User not found");
+        return false;
+    }
+
+
+    public void itscreen(){  //edw new window
+
+        Label  usernamelbl;
+        itWindow=new Stage();
+        itWindow.setTitle("IT WINDOW");
+        BorderPane itroot=new BorderPane();
+
+        //left edw tha valw ta buttons
+        StackPane leftPane = new StackPane();
+        leftPane.setBackground(new Background(new BackgroundFill(Color.DIMGRAY,CornerRadii.EMPTY,Insets.EMPTY)));
+        btnexitit=new Button("Exit");
+        btnexitit.setAlignment(Pos.TOP_CENTER);
+        btnexitit.setLayoutX(100);
+        btnexitit.setLayoutY(100);
+        btnexitit.setPrefSize(100,50);
+        btnexitit.setFont(Font.font("Verdana",25));
+        btnexitit.setOnAction(e->System.exit(0));
+        leftPane.getChildren().add(btnexitit);
+        itroot.setLeft(leftPane);
+
+        //top pane
+        VBox topPane=new VBox();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime datenow =LocalDateTime.now();
+        topPane.setBackground(new Background(new BackgroundFill(Color.ORANGE,CornerRadii.EMPTY,Insets.EMPTY)));
+        title=new Label("USER:IT  \t"+ dtf.format(datenow));
+        topPane.setAlignment(Pos.TOP_LEFT);
+        topPane.getChildren().add(title);
+        itroot.setTop(topPane);
+
+
+        //right pane
+        VBox rightPane=new VBox();
+        rightPane.setBackground(new Background(new BackgroundFill(Color.DIMGRAY,CornerRadii.EMPTY,Insets.EMPTY)));
+        buttonselect=new Button("SELECT");
+        buttondel=new Button("DELETE");
+        buttoninsert=new Button("INSERT");
+        buttonupdate=new Button("UPDATE");
+
+        buttonselect.setFont(Font.font("Verdana",15));
+        buttondel.setFont(Font.font("Verdana",15));
+        buttoninsert.setFont(Font.font("Verdana",15));
+        buttonupdate.setFont(Font.font("Verdana",15));
+
+        buttonselect.setPrefSize(150,50);
+        buttonupdate.setPrefSize(150,50);
+        buttondel.setPrefSize(150,50);
+        buttoninsert.setPrefSize(150,50);
+
+        buttoninsert.setOnAction(e->InsertValues());
+        buttondel.setOnAction(e->DeleteValues());
+        buttonupdate.setOnAction(e->UpdateValues());
+        buttonselect.setOnAction(e->SelectValues());
+
+        VBox Rpane1=new VBox(buttonselect);
+        VBox Rpane2=new VBox(buttonupdate);
+        VBox Rpane3=new VBox(buttondel);
+        VBox Rpane4=new VBox(buttoninsert);
+
+
+        rightPane.getChildren().addAll(Rpane1,Rpane2,Rpane3,Rpane4);
+        rightPane.setAlignment(Pos.CENTER);
+        rightPane.setSpacing(100);
+        rightPane.setPadding(new Insets(50));
+        itroot.setRight(rightPane);
+
+        //center
+
+
+        itscene=new Scene(itroot,1200,900);
+        itWindow.setScene(itscene);
+        itWindow.show();
+    }
+
+    public void setValue(){
+        if(TableChoice.getItems().contains(txtValue.getText()))
+            TableChoice.setValue(txtValue.getText());
+    }
+
+    public void InsertValues(){
+        comboboxlbl=new Label("Insert into: ");
+
+        combobtn=new Button("OK");
+        insertstage=new Stage();
+
+
+        BorderPane root=new BorderPane();
+        TableChoice=new ComboBox<>();
+        TableChoice.getItems().addAll("admin","branch", "destination", "driver", "event", "guide", "itdepartment",
+                "languages", "logger", "manages", "offers", "phones", "reservation", "reservation_offers","travel_to","trip","worker");
+        TableChoice.setEditable(true);
+        HBox TopPane=new HBox(comboboxlbl,TableChoice,combobtn);
+        TopPane.setStyle("-fx-background-color: rgba(1,0,0,0);");
+        TopPane.setAlignment(Pos.CENTER);
+        TopPane.setBackground(new Background(new BackgroundFill(Color.DIMGRAY,CornerRadii.EMPTY,Insets.EMPTY)));
+        root.setTop(TopPane);
+
+
+        TableChoice.getEditor().textProperty().addListener((observable,oldText,newText) ->{
+            TableChoice.setValue(newText);
+        } );
+
+
+        comboscene=new Scene(root,1200,900);
+        VBox.setMargin(TableChoice,new Insets(20,0,0,0));
+        insertstage.setScene(comboscene);
+        insertstage.setResizable(false);
+        insertstage.show();
+    }
+
+    public void SelectValues(){
+
+    }
+
+    public void UpdateValues(){
+
+    }
+    public void DeleteValues(){
+
+    }
+    //telos
+}
+
+
+import java.lang.*;
+
+        import javafx.scene.control.Button;
+        import javafx.scene.text.Font;
+        import javafx.scene.text.Text;
+        import javafx.stage.*;
+        import javafx.scene.*;
+        import javafx.scene.layout.*;
+        import javafx.scene.control.*;
+        import javafx.geometry.*;
+        import javafx.scene.paint.*;
+        import java.sql.*;
+        import java.time.*;
+        import java.time.format.DateTimeFormatter;
+
+
+public class SQLengine {
+    private String tablechoose;
+    Stage mainscreen,insertstage,itWindow;
+    String username,password;
+    Label title,comboboxlbl;
+    Button buttoninsert,buttondel,buttonupdate,buttonselect,btnexitit,combobtn;
+    ComboBox<String> TableChoice;
+    Scene itscene,comboscene;
+    TextField txtValue;
+
+
+    //kanei authenticate ton xrhsth oti yparxei sto database kai einai sto itdepartment
+    public boolean Authentication(String username1,String password1){
+        String tempuser,temppass,workerselect,workerAM,fname,lname,fullusername;
+
+        try(Connection conn=DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/ceidprojectsql22",
+                username1,password1)){     //leitourgei
+            Statement stmt=conn.createStatement();
+            Statement stmt2=conn.createStatement();
+            String itcheckexists="SELECT it_at,password FROM itdepartment";  //pairnei to AM kai to password apo to itdepartment
+
+            ResultSet itresult=stmt.executeQuery(itcheckexists);
+
+            if(conn!=null){System.out.println("LOGIN SUCCESSFUL");}  //GIA TIN CONSOLA
+
+            while(itresult.next()){                                         //while gia tin periptwsh poy exoyme parapanw apo enan sto itdepartment
+                temppass=itresult.getString("password");
+                workerAM=itresult.getString("it_at");        //epistrefei ton worker me to AM apo to itresult set
+
+                String workername="SELECT wrk_name,wrk_lname FROM worker WHERE wrk_AT='"+workerAM+"'";
+                ResultSet workerresult= stmt2.executeQuery(workername);  //tha epistrepsei fname kai lname toy worker
+                workerresult.next();  //einai null stin arxi kai prepei na paei sto monadiko stoixeio poy epistrefetai
+                fname=workerresult.getString("wrk_name");
+                lname=workerresult.getString("wrk_lname");
+                fullusername=fname.concat(lname);           //concat gia na parw to fullusername
+
+
+                if((fullusername.equals(username1))&&(password1.equals(temppass))){   //checkarei to workername kai to password toy it ama yparxei,kai an nai epistrefei true sto  login
+                    return true;
+                }  //doulevei
+            }
+
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        System.out.println("User not found");
+        return false;
+    }
+
+
+    public void itscreen(){  //edw new window
+
+        Label  usernamelbl;
+        itWindow=new Stage();
+        itWindow.setTitle("IT WINDOW");
+        BorderPane itroot=new BorderPane();
+
+        //left edw tha valw ta buttons
+        StackPane leftPane = new StackPane();
+        leftPane.setBackground(new Background(new BackgroundFill(Color.DIMGRAY,CornerRadii.EMPTY,Insets.EMPTY)));
+        btnexitit=new Button("Exit");
+        btnexitit.setAlignment(Pos.TOP_CENTER);
+        btnexitit.setLayoutX(100);
+        btnexitit.setLayoutY(100);
+        btnexitit.setPrefSize(100,50);
+        btnexitit.setFont(Font.font("Verdana",25));
+        btnexitit.setOnAction(e->System.exit(0));
+        leftPane.getChildren().add(btnexitit);
+        itroot.setLeft(leftPane);
+
+        //top pane
+        VBox topPane=new VBox();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime datenow =LocalDateTime.now();
+        topPane.setBackground(new Background(new BackgroundFill(Color.ORANGE,CornerRadii.EMPTY,Insets.EMPTY)));
+        title=new Label("USER:IT  \t"+ dtf.format(datenow));
+        topPane.setAlignment(Pos.TOP_LEFT);
+        topPane.getChildren().add(title);
+        itroot.setTop(topPane);
+
+
+        //right pane
+        VBox rightPane=new VBox();
+        rightPane.setBackground(new Background(new BackgroundFill(Color.DIMGRAY,CornerRadii.EMPTY,Insets.EMPTY)));
+        buttonselect=new Button("SELECT");
+        buttondel=new Button("DELETE");
+        buttoninsert=new Button("INSERT");
+        buttonupdate=new Button("UPDATE");
+
+        buttonselect.setFont(Font.font("Verdana",15));
+        buttondel.setFont(Font.font("Verdana",15));
+        buttoninsert.setFont(Font.font("Verdana",15));
+        buttonupdate.setFont(Font.font("Verdana",15));
+
+        buttonselect.setPrefSize(150,50);
+        buttonupdate.setPrefSize(150,50);
+        buttondel.setPrefSize(150,50);
+        buttoninsert.setPrefSize(150,50);
+
+        buttoninsert.setOnAction(e->InsertValues());
+        buttondel.setOnAction(e->DeleteValues());
+        buttonupdate.setOnAction(e->UpdateValues());
+        buttonselect.setOnAction(e->SelectValues());
+
+        VBox Rpane1=new VBox(buttonselect);
+        VBox Rpane2=new VBox(buttonupdate);
+        VBox Rpane3=new VBox(buttondel);
+        VBox Rpane4=new VBox(buttoninsert);
+
+
+        rightPane.getChildren().addAll(Rpane1,Rpane2,Rpane3,Rpane4);
+        rightPane.setAlignment(Pos.CENTER);
+        rightPane.setSpacing(100);
+        rightPane.setPadding(new Insets(50));
+        itroot.setRight(rightPane);
+
+        //center
+
+
+        itscene=new Scene(itroot,1200,900);
+        itWindow.setScene(itscene);
+        itWindow.show();
+    }
+
+    public void setValue(){
+        if(TableChoice.getItems().contains(txtValue.getText()))
+            TableChoice.setValue(txtValue.getText());
+    }
+
+    public void InsertValues(){
+        comboboxlbl=new Label("Insert into: ");
+
+        combobtn=new Button("OK");
+        insertstage=new Stage();
+
+
+        BorderPane root=new BorderPane();
+        TableChoice=new ComboBox<>();
+        TableChoice.getItems().addAll("admin","branch", "destination", "driver", "event", "guide", "itdepartment",
+                "languages", "logger", "manages", "offers", "phones", "reservation", "reservation_offers","travel_to","trip","worker");
+        TableChoice.setEditable(true);
+        HBox TopPane=new HBox(comboboxlbl,TableChoice,combobtn);
+        TopPane.setStyle("-fx-background-color: rgba(1,0,0,0);");
+        TopPane.setAlignment(Pos.CENTER);
+        TopPane.setBackground(new Background(new BackgroundFill(Color.DIMGRAY,CornerRadii.EMPTY,Insets.EMPTY)));
+        root.setTop(TopPane);
+
+
+        TableChoice.getEditor().textProperty().addListener((observable,oldText,newText) ->{
+            TableChoice.setValue(newText);
+        } );
+
+
+        comboscene=new Scene(root,1200,900);
+        VBox.setMargin(TableChoice,new Insets(20,0,0,0));
+        insertstage.setScene(comboscene);
+        insertstage.setResizable(false);
+        insertstage.show();
+    }
+
+    public void SelectValues(){
+
+    }
+
+    public void UpdateValues(){
+
+    }
+    public void DeleteValues(){
+
+    }
+    //telos
+}

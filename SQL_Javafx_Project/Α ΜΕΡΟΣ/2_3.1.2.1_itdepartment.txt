@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS itdepartment;
+CREATE TABLE IF NOT EXISTS itdepartment
+(
+it_at char(10) NOT NULL,
+password varchar(10) DEFAULT 'password' NOT NULL,
+start_date DATE NOT NULL,
+end_date DATE DEFAULT NULL,
+PRIMARY KEY(it_at),
+CONSTRAINT it_at_fk FOREIGN KEY (it_at) REFERENCES worker(wrk_AT)
+ON UPDATE CASCADE ON DELETE CASCADE
+);

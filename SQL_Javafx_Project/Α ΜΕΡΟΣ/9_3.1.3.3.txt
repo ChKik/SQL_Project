@@ -1,0 +1,45 @@
+DELIMITER $$
+DROP PROCEDURE IF EXISTS DeleteEmployee$$
+CREATE PROCEDURE DeleteEmployee(IN fname VARCHAR(20),IN lname VARCHAR(20))
+BEGIN
+DECLARE firstname VARCHAR(20);
+DECLARE lastname VARCHAR(20);
+DECLARE amcheck char(10);
+DECLARE finishedflag INT;
+DECLARE jobtype TEXT;
+DECLARE ismanager char(10);
+
+DECLARE  StatusCheck CURSOR FOR 
+SELECT wrk_AT,wrk_name,wrk_lname FROM worker WHERE wrk_name=fname AND wrk_lname=lname;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET finishedflag=1;
+OPEN StatusCheck;
+SET finishedflag=0;
+																	-- xreiazomaste cursor dioti mporei na yparxei 2 atoma me to idio onoma
+REPEAT   							
+	FETCH StatusCheck INTO amcheck,firstname,lastname;
+    IF (finishedflag=0) THEN
+		SELECT adm_type 
+        INTO jobtype
+        FROM admin
+        WHERE adm_AT=amcheck;  										-- checkarei ton type toy work sto admin
+		
+        SELECT mng_adm_AT
+        INTO ismanager
+        FROM manages												-- epistrefei to AM an yparxei sto manages alliws gurizei NULL
+        WHERE mng_adm_AT=amcheck;   
+        
+        CASE
+			WHEN (jobtype='ADMINISTRATIVE' AND ismanager IS NOT NULL) THEN SELECT 'USER IS THE MANAGER OF A BRANCH AND DELETION IS NOT ALLOWED' AS OUTPUT;
+            WHEN (jobtype='ADMINISTRATIVE') THEN DELETE FROM worker WHERE wrk_AT=amcheck;
+			ELSE SELECT 'USER IS NOT AN ADMINISTRATOR' AS OUTPUT;
+		END CASE;
+	END IF;
+UNTIL(finishedflag=1)
+END REPEAT;
+CLOSE StatusCheck;
+END$$
+DELIMITER ;
+
+INSERT INTO worker VALUES('AM1020','MPAMPIS','FESATOGLOY','1234.0','1');
+INSERT INTO admin VALUES('AM1020','ADMINISTRATIVE','AFAFAFAFAFAFAFA');
+CALL DeleteEmployee('John','Papamixahl');

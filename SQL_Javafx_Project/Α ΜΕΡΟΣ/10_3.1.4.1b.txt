@@ -1,0 +1,31 @@
+-- DROP INDEX namesindex ON reservation_offers;
+CREATE INDEX namesindex
+ON reservation_offers(lname);
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS NamesReturn$$
+CREATE PROCEDURE NamesReturn(IN epwnumo VARCHAR(30))
+BEGIN
+DECLARE finishedflag INT;
+DECLARE lastname VARCHAR(30);
+DECLARE firstname VARCHAR(30);
+DECLARE id_prosforas INT;
+
+DECLARE NameCursor CURSOR FOR 
+SELECT lname,fname,id_prosforas_reserve FROM reservation_offers WHERE lname=epwnumo;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET finishedflag=1;
+OPEN NameCursor;
+SET finishedflag=0;
+
+REPEAT
+	FETCH NameCursor INTO lastname,firstname,id_prosforas;
+	IF(finishedflag=0) THEN
+		SELECT lastname,firstname,id_prosforas;
+	END IF;
+UNTIL(finishedflag=1)
+END REPEAT;
+CLOSE NameCursor;
+END$$
+DELIMITER ;
+
+
